@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PalTracker
 {
-    [Route("/TimeEntry")]
+    [Route("/time-entries")]
     public class TimeEntryController : ControllerBase
     {
         public ITimeEntryRepository _repo { get; set; }
@@ -15,21 +15,22 @@ namespace PalTracker
             _repo = repo;
         }
 
-        [HttpGet("{i}")]
-        public IActionResult  Read(int i)
+        [HttpGet("{id}", Name = "GetTimeEntry")]
+        public IActionResult  Read(int id)
         {
-           return _repo.Contains(i) ? (IActionResult) Ok(_repo.Find(i)) : NotFound();
+           return _repo.Contains(id) ? (IActionResult) Ok(_repo.Find(id)) : NotFound();
         }
 
         [HttpPost]
         public IActionResult  Create([FromBody] TimeEntry timeEntry)
         {
-            var x = _repo.Create(timeEntry);
-            return Ok(x);
+            var createdTimeEntry = _repo.Create(timeEntry);
+            //return Created("", createdTimeEntry);
+            return CreatedAtRoute("GetTimeEntry", new {id = createdTimeEntry.Id}, createdTimeEntry);
         }
         
         [HttpGet]
-        public IActionResult  List()
+        public IActionResult  List() 
         {
             return Ok(_repo.List());
         }
@@ -48,7 +49,7 @@ namespace PalTracker
                 return NotFound();
              }
              _repo.Delete(i);
-             return Ok();
+             return NoContent();
         }
     }
 }
