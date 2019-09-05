@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 
 namespace PalTracker
 {
@@ -33,7 +34,9 @@ namespace PalTracker
                 Configuration.GetValue<string>("CF_Instance_Index", "CF_Instance_Index not configured."),
                 Configuration.GetValue<string>("CF_Instance_Addr", "CF_Instance_Addr not configured.")
             ));
-            services.AddSingleton<ITimeEntryRepository, InMemoryTimeEntryRepository>();
+            //services.AddSingleton<ITimeEntryRepository, InMemoryTimeEntryRepository>();
+            services.AddScoped<ITimeEntryRepository, MySqlTimeEntryRepository>();
+            services.AddDbContext<TimeEntryContext>(options => options.UseMySql(Configuration));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
