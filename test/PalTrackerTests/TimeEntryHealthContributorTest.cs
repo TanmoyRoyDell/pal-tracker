@@ -12,6 +12,7 @@ namespace PalTrackerTests
     {
         private readonly TimeEntryHealthContributor _contributor;
         private readonly Mock<ITimeEntryRepository> _repository;
+        private const int MaxTimeEntries = 5;
 
         public TimeEntryHealthContributorTest()
         {
